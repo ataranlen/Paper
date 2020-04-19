@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
  *
  * This event may fire on login, world change, and permission rebuilds, by plugin request, and potentially future means.
  *
+ * This event will fire before {@link org.bukkit.event.player.PlayerCommandSendEvent}, so no filtering has been done by
+ * other plugins yet.
+ *
  * WARNING: This event will potentially (and most likely) fire twice! Once for Async, and once again for Sync.
  * It is important that you check event.isAsync() and event.hasFiredAsync() to ensure you only act once.
  * If for some reason we are unable to send this asynchronously in the future, only the sync method will fire.
@@ -23,13 +26,13 @@ import org.jetbrains.annotations.NotNull;
  * If your logic is not safe to run asynchronously, only react to the synchronous version.
  * @deprecated Draft API - Subject to change until confirmed solves desired use cases
  */
-public class AsyncPlayerSendCommands extends PlayerEvent {
+public class AsyncPlayerSendCommandsEvent extends PlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
     private final RootCommandNode node;
     private final boolean hasFiredAsync;
 
-    public AsyncPlayerSendCommands(Player player, RootCommandNode node, boolean hasFiredAsync) {
+    public AsyncPlayerSendCommandsEvent(Player player, RootCommandNode node, boolean hasFiredAsync) {
         super(player, !Bukkit.isPrimaryThread());
         this.node = node;
         this.hasFiredAsync = hasFiredAsync;
