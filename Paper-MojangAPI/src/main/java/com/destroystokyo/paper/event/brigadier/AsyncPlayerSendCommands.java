@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * if (event.isAsync() || (!event.isAsync() && !event.hasFiredAsync())) { do stuff }
  *
  * If your logic is not safe to run asynchronously, only react to the synchronous version.
+ * @deprecated Draft API - Subject to change until confirmed solves desired use cases
  */
 public class AsyncPlayerSendCommands extends PlayerEvent {
 
@@ -34,10 +35,16 @@ public class AsyncPlayerSendCommands extends PlayerEvent {
         this.hasFiredAsync = hasFiredAsync;
     }
 
+    /**
+     * @return The full Root Command Node being sent to the client, which is mutable.
+     */
     public RootCommandNode getCommandNode() {
         return node;
     }
 
+    /**
+     * @return If this event has already fired asynchronously.
+     */
     public boolean hasFiredAsync() {
         return hasFiredAsync;
     }

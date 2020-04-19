@@ -9,6 +9,16 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.server.ServerEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Fired anytime the server synchronizes Bukkit CommandMap to Brigadier.
+ *
+ * Allows a plugin to control the Literal and Argument nodes for this command to be
+ * sent to the client.
+ * This is done at Plugin Enable time after commands have been registered, but some
+ * plugins may use reflection to retrigger this rebuild during runtime.
+ *
+ * @deprecated Draft API - Subject to change until confirmed solves desired use cases
+ */
 public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
@@ -27,6 +37,9 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
         this.defaultArgs = defaultArgs;
     }
 
+    /**
+     * @return The command name being registered
+     */
     public String getCommandLabel() {
         return label;
     }
@@ -61,6 +74,11 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
         return literal;
     }
 
+    /**
+     * Changes the literal used to register this command. The previous literable is mutable, so this is primarily if
+     * you want to completely replace the object.
+     * @param literal
+     */
     public void setLiteral(LiteralCommandNode literal) {
         this.literal = literal;
     }
@@ -74,6 +92,9 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
     }
 
     /**
+     * Cancels registering this command to Brigadier, but will remain in Bukkit Command Map. Can be used to hide a
+     * command from all players.
+     *
      * {@inheritDoc}
      */
     @Override
