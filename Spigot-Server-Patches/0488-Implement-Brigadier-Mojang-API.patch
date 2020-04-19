@@ -1,0 +1,72 @@
+From 06c285d631bfa1d1250c52057f38445a17591f25 Mon Sep 17 00:00:00 2001
+From: Aikar <aikar@aikar.co>
+Date: Sun, 19 Apr 2020 18:15:29 -0400
+Subject: [PATCH] Implement Brigadier Mojang API
+
+Adds AsyncPlayerSendCommandsEvent
+  - Allows modifying on a per command basis what command data they see.
+
+Adds CommandRegisteredEvent
+  - Allows manipulating the CommandNode to add more children/metadata for the client
+
+diff --git a/src/main/java/net/minecraft/server/CommandDispatcher.java b/src/main/java/net/minecraft/server/CommandDispatcher.java
+index 2414b0a552..8584140aab 100644
+--- a/src/main/java/net/minecraft/server/CommandDispatcher.java
++++ b/src/main/java/net/minecraft/server/CommandDispatcher.java
+@@ -267,6 +267,7 @@ public class CommandDispatcher {
+             bukkit.add(node.getName());
+         }
+         // Paper start - Async command map building
++        new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommands(entityplayer.getBukkitEntity(), rootcommandnode, false).callEvent(); // Paper
+         MinecraftServer.getServer().execute(() -> {
+            runSync(entityplayer, bukkit, rootcommandnode);
+         });
+@@ -283,6 +284,7 @@ public class CommandDispatcher {
+                 rootcommandnode.removeCommand(orig);
+             }
+         }
++        new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommands(entityplayer.getBukkitEntity(), rootcommandnode, true).callEvent(); // Paper
+         // CraftBukkit end
+         entityplayer.playerConnection.sendPacket(new PacketPlayOutCommands(rootcommandnode));
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java b/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java
+index 5f33c9e52a..ea078ef6af 100644
+--- a/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java
++++ b/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java
+@@ -17,7 +17,7 @@ import net.minecraft.server.CommandListenerWrapper;
+ import org.bukkit.command.Command;
+ import org.bukkit.craftbukkit.CraftServer;
+ 
+-public class BukkitCommandWrapper implements com.mojang.brigadier.Command<CommandListenerWrapper>, Predicate<CommandListenerWrapper>, SuggestionProvider<CommandListenerWrapper> {
++public class BukkitCommandWrapper implements com.mojang.brigadier.Command<CommandListenerWrapper>, Predicate<CommandListenerWrapper>, SuggestionProvider<CommandListenerWrapper>, com.destroystokyo.paper.brigadier.BukkitBrigadierCommand<CommandListenerWrapper> { // Paper
+ 
+     private final CraftServer server;
+     private final Command command;
+@@ -28,10 +28,20 @@ public class BukkitCommandWrapper implements com.mojang.brigadier.Command<Comman
+     }
+ 
+     public LiteralCommandNode<CommandListenerWrapper> register(CommandDispatcher<CommandListenerWrapper> dispatcher, String label) {
+-        return dispatcher.register(
+-                LiteralArgumentBuilder.<CommandListenerWrapper>literal(label).requires(this).executes(this)
+-                .then(RequiredArgumentBuilder.<CommandListenerWrapper, String>argument("args", StringArgumentType.greedyString()).suggests(this).executes(this))
+-        );
++        // Paper start - Expose Brigadier to Paper-MojangAPI
++        com.mojang.brigadier.tree.RootCommandNode<CommandListenerWrapper> root = dispatcher.getRoot();
++        LiteralCommandNode<CommandListenerWrapper> literal = LiteralArgumentBuilder.<CommandListenerWrapper>literal(label).requires(this).executes(this).build();
++        com.mojang.brigadier.tree.ArgumentCommandNode<CommandListenerWrapper, String> defaultArgs = RequiredArgumentBuilder.<CommandListenerWrapper, String>argument("args", StringArgumentType.greedyString()).suggests(this).executes(this).build();
++        literal.addChild(defaultArgs);
++        com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent event = new com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent(label, this, root, literal, defaultArgs);
++        if (!event.callEvent()) {
++            return null;
++        }
++        //noinspection unchecked
++        literal = event.getLiteral();
++        root.addChild(literal);
++        return literal;
++        // Paper end
+     }
+ 
+     @Override
+-- 
+2.25.1
+
