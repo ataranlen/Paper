@@ -1,4 +1,4 @@
-From d6b74b63a896a9fd470a73107f54663290531f97 Mon Sep 17 00:00:00 2001
+From b40ff0fad11893bdd414158ceccc0ed6daca74d6 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 19 Apr 2020 18:15:29 -0400
 Subject: [PATCH] Implement Brigadier Mojang API
@@ -30,7 +30,7 @@ index 2414b0a552..6deba313b2 100644
          event.getPlayer().getServer().getPluginManager().callEvent(event);
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java b/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java
-index 5f33c9e52a..ea078ef6af 100644
+index 5f33c9e52a..d6626c05ad 100644
 --- a/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java
 +++ b/src/main/java/org/bukkit/craftbukkit/command/BukkitCommandWrapper.java
 @@ -17,7 +17,7 @@ import net.minecraft.server.CommandListenerWrapper;
@@ -55,12 +55,12 @@ index 5f33c9e52a..ea078ef6af 100644
 +        LiteralCommandNode<CommandListenerWrapper> literal = LiteralArgumentBuilder.<CommandListenerWrapper>literal(label).requires(this).executes(this).build();
 +        com.mojang.brigadier.tree.ArgumentCommandNode<CommandListenerWrapper, String> defaultArgs = RequiredArgumentBuilder.<CommandListenerWrapper, String>argument("args", StringArgumentType.greedyString()).suggests(this).executes(this).build();
 +        literal.addChild(defaultArgs);
-+        com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent event = new com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent(label, this, root, literal, defaultArgs);
++        com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent event = new com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent(label, this, this.command, root, literal, defaultArgs);
 +        if (!event.callEvent()) {
 +            return null;
 +        }
 +        //noinspection unchecked
-+        literal = event.getLiteral();
++        literal = (LiteralCommandNode<CommandListenerWrapper>) event.getLiteral();
 +        root.addChild(literal);
 +        return literal;
 +        // Paper end

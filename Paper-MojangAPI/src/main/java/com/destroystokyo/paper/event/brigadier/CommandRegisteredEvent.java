@@ -4,6 +4,7 @@ import com.destroystokyo.paper.brigadier.BukkitBrigadierCommand;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import org.bukkit.command.Command;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.server.ServerEvent;
@@ -22,15 +23,17 @@ import org.jetbrains.annotations.NotNull;
 public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private final String label;
-    private final BukkitBrigadierCommand command;
-    private final RootCommandNode root;
-    private final ArgumentCommandNode defaultArgs;
-    private LiteralCommandNode literal;
+    private final String commandLabel;
+    private final BukkitBrigadierCommand<?> brigadierCommand;
+    private final Command command;
+    private final RootCommandNode<?> root;
+    private final ArgumentCommandNode<?, ?> defaultArgs;
+    private LiteralCommandNode<?> literal;
     private boolean cancelled = false;
 
-    public CommandRegisteredEvent(String label, BukkitBrigadierCommand command, RootCommandNode root, LiteralCommandNode literal, ArgumentCommandNode defaultArgs) {
-        this.label = label;
+    public CommandRegisteredEvent(String commandLabel, BukkitBrigadierCommand<?> brigadierCommand, Command command, RootCommandNode<?> root, LiteralCommandNode<?> literal, ArgumentCommandNode<?, ?> defaultArgs) {
+        this.commandLabel = commandLabel;
+        this.brigadierCommand = brigadierCommand;
         this.command = command;
         this.root = root;
         this.literal = literal;
@@ -41,20 +44,24 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
      * @return The command name being registered
      */
     public String getCommandLabel() {
-        return label;
+        return commandLabel;
     }
 
     /**
      * @return The Bukkit API Brigadier Wrapped Command Object to handle executions and suggestions
      */
-    public BukkitBrigadierCommand getCommand() {
+    public BukkitBrigadierCommand<?> getBrigadierCommand() {
+        return brigadierCommand;
+    }
+
+    public Command getCommand() {
         return command;
     }
 
     /**
      * @return Gets the root command node being used to register a command to.
      */
-    public RootCommandNode getRoot() {
+    public RootCommandNode<?> getRoot() {
         return root;
     }
 
@@ -62,7 +69,7 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
      * Returns the Bukkit API's default handling of Arguments, if you wish to reuse it.
      * @return
      */
-    public ArgumentCommandNode getDefaultArgs() {
+    public ArgumentCommandNode<?, ?> getDefaultArgs() {
         return defaultArgs;
     }
 
@@ -70,7 +77,7 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
      * Returns the Bukkit API's default literal for this command, including the {@link #getDefaultArgs()} as a child already.
      * @return
      */
-    public LiteralCommandNode getLiteral() {
+    public LiteralCommandNode<?> getLiteral() {
         return literal;
     }
 
@@ -79,7 +86,7 @@ public class CommandRegisteredEvent extends ServerEvent implements Cancellable {
      * you want to completely replace the object.
      * @param literal
      */
-    public void setLiteral(LiteralCommandNode literal) {
+    public void setLiteral(LiteralCommandNode<?> literal) {
         this.literal = literal;
     }
 
