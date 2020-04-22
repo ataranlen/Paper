@@ -823,7 +823,11 @@ index 000000000..ddaed8127
 +                Map<RegionId, RegionData> regions = LoadingMap.newHashMap(RegionData.LOADER);
 +
 +                for (Chunk chunk : world.getLoadedChunks()) {
-+                    RegionData data = regions.get(new RegionId(chunk.getX(), chunk.getZ()));
++                    RegionId regionId = new RegionId(0,0);
++                    if (TimingsManager.showRegions) {
++                        regionId = new RegionId(chunk.getX(), chunk.getZ());
++                    }
++                    RegionData data = regions.get(regionId);
 +
 +                    for (Entity entity : chunk.getEntities()) {
 +                        if (entity == null) {
@@ -2098,6 +2102,7 @@ index 000000000..ef824d701
 +    public static final Timing PLUGIN_GROUP_HANDLER = Timings.ofSafe("Plugins");
 +    public static List<String> hiddenConfigs = new ArrayList<String>();
 +    public static boolean privacy = false;
++    public static boolean showRegions = true;
 +
 +    static final List<TimingHandler> HANDLERS = new ArrayList<>(1024);
 +    static final List<TimingHistory.MinuteReport> MINUTE_REPORTS = new ArrayList<>(64);
