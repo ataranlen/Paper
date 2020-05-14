@@ -1,4 +1,4 @@
-From dda783c45cf1ec51ff0039bb5528281ed983ef67 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Spottedleaf <Spottedleaf@users.noreply.github.com>
 Date: Mon, 8 Jul 2019 00:13:36 -0700
 Subject: [PATCH] Use getChunkIfLoadedImmediately in places
@@ -8,10 +8,10 @@ ticket level 33 (yes getChunkIfLoaded will actually perform a chunk
 load in that case).
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 69133121..f88bcb29 100644
+index 0a06ed36795afad00839174fc1a7e7f7b9e4a8c8..cf3e15e70ac22bbdd39153956cfdc6d2f8f44e2b 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -989,7 +989,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -996,7 +996,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                                  speed = player.abilities.walkSpeed * 10f;
                              }
                              // Paper start - Prevent moving into unloaded chunks
@@ -21,7 +21,7 @@ index 69133121..f88bcb29 100644
                                  return;
                              }
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 0bde1717..90f60dfd 100644
+index 0bde1717431d770a9a73e83b56388d6f4923e404..311685180fe720706dfb6c82b1b54f9876187b73 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -116,8 +116,16 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -59,8 +59,17 @@ index 0bde1717..90f60dfd 100644
  
              return ichunkaccess == null ? false : ichunkaccess.getType(blockposition).a((IBlockAccess) this, blockposition, entity);
          }
+@@ -1232,7 +1240,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+ 
+         for (int i1 = i; i1 < j; ++i1) {
+             for (int j1 = k; j1 < l; ++j1) {
+-                Chunk chunk = ichunkprovider.a(i1, j1);
++                Chunk chunk = (Chunk)this.getChunkIfLoadedImmediately(i1, j1); // Paper
+ 
+                 if (chunk != null) {
+                     chunk.a(oclass, axisalignedbb, list, predicate);
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index f86404f8..92601c58 100644
+index f86404f83ae605159307a3ad2cca6c6c314a01af..92601c581cffac471872226abeb93ef9aa24f079 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -143,9 +143,10 @@ public class ActivationRange
@@ -76,6 +85,3 @@ index f86404f8..92601c58 100644
                      }
                  }
              }
--- 
-2.25.1.windows.1
-

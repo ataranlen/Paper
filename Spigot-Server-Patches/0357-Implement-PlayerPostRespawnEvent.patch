@@ -1,14 +1,14 @@
-From 38f581e7c99c67fc727ae99afdcf741ddbeeba8d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: MisterVector <whizkid3000@hotmail.com>
 Date: Fri, 26 Oct 2018 21:31:00 -0700
 Subject: [PATCH] Implement PlayerPostRespawnEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index 7745e70d..765ebe2c 100644
+index faecf79341623305a2ae55cb9c4b8844adf0c5bb..b8302de65a7b04790594d23e0bb730b2d3a1b191 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -625,9 +625,14 @@ public abstract class PlayerList {
+@@ -627,9 +627,14 @@ public abstract class PlayerList {
  
          // this.a(entityplayer1, entityplayer, worldserver); // CraftBukkit - removed
  
@@ -24,7 +24,7 @@ index 7745e70d..765ebe2c 100644
              CraftWorld cworld = (CraftWorld) this.server.server.getWorld(entityplayer.spawnWorld);
              if (cworld != null && blockposition != null) {
              Optional<Vec3D> optional = EntityHuman.getBed(cworld.getHandle(), blockposition, flag1);
-@@ -660,6 +665,7 @@ public abstract class PlayerList {
+@@ -662,6 +667,7 @@ public abstract class PlayerList {
  
              location = respawnEvent.getRespawnLocation();
              if (!flag) entityplayer.reset(); // SPIGOT-4785
@@ -32,7 +32,7 @@ index 7745e70d..765ebe2c 100644
          } else {
              location.setWorld(server.getWorldServer(dimensionmanager).getWorld());
          }
-@@ -721,6 +727,13 @@ public abstract class PlayerList {
+@@ -723,6 +729,13 @@ public abstract class PlayerList {
          if (entityplayer.playerConnection.isDisconnected()) {
              this.savePlayerFile(entityplayer);
          }
@@ -46,6 +46,3 @@ index 7745e70d..765ebe2c 100644
          // CraftBukkit end
          return entityplayer1;
      }
--- 
-2.25.1.windows.1
-

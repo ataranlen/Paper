@@ -1,11 +1,11 @@
-From 755a3e8943286365b0f518c5423687872c8181ae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Zach Brown <zach.brown@destroystokyo.com>
 Date: Tue, 1 Mar 2016 00:16:08 +0100
 Subject: [PATCH] POM changes
 
 
 diff --git a/pom.xml b/pom.xml
-index 8964b9e33..ce09baeab 100644
+index 186405ba1914b2b384896c61770c225b50091401..9975ba9ae19f6217bec206fee247fac1a30d58fc 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -2,34 +2,28 @@
@@ -85,13 +85,22 @@ index 8964b9e33..ce09baeab 100644
          <!-- bundled with Minecraft, should be kept in sync -->
          <dependency>
              <groupId>com.google.guava</groupId>
-@@ -113,15 +125,12 @@
+@@ -107,12 +119,13 @@
+         <dependency>
+             <groupId>org.ow2.asm</groupId>
+             <artifactId>asm-tree</artifactId>
+-            <version>7.3.1</version>
++            <version>8.0.1</version> <!-- Paper -->
+             <scope>test</scope>
+         </dependency>
      </dependencies>
  
      <build>
 +        <defaultGoal>clean install</defaultGoal>
          <plugins>
              <plugin>
+                 <groupId>net.md-5</groupId>
+@@ -131,10 +144,6 @@
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-compiler-plugin</artifactId>
                  <version>3.8.1</version>
@@ -102,14 +111,11 @@ index 8964b9e33..ce09baeab 100644
                  <dependencies>
                      <!-- we need our custom version as it fixes some bugs on case sensitive file systems -->
                      <dependency>
-@@ -156,6 +165,7 @@
-                     </execution>
-                 </executions>
-                 <configuration>
+@@ -180,6 +189,7 @@
+                             </excludes>
+                         </filter>
+                     </filters>
 +                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
                      <!-- when downloading via Maven we can pull depends individually -->
                      <shadedArtifactAttached>true</shadedArtifactAttached>
                  </configuration>
--- 
-2.25.1
-

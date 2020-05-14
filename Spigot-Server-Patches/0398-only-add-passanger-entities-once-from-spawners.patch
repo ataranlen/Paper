@@ -1,11 +1,11 @@
-From 176dd584e7bd6449290e4fd2623491269521e870 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: kickash32 <kickash32@gmail.com>
 Date: Wed, 21 Aug 2019 23:57:32 +0500
 Subject: [PATCH] only add passanger entities once from spawners
 
 
 diff --git a/src/main/java/net/minecraft/server/MobSpawnerAbstract.java b/src/main/java/net/minecraft/server/MobSpawnerAbstract.java
-index 41001b02..df494d37 100644
+index 41001b02a654194c4a8e25ad5f7af8fdd91090b2..df494d37be687860878c2709ae7996510118a559 100644
 --- a/src/main/java/net/minecraft/server/MobSpawnerAbstract.java
 +++ b/src/main/java/net/minecraft/server/MobSpawnerAbstract.java
 @@ -196,7 +196,7 @@ public abstract class MobSpawnerAbstract {
@@ -17,6 +17,3 @@ index 41001b02..df494d37 100644
              Iterator iterator = entity.getPassengers().iterator();
  
              while (iterator.hasNext()) {
--- 
-2.25.1.windows.1
-

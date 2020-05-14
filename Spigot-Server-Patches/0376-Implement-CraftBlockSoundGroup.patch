@@ -1,4 +1,4 @@
-From d448c0b0eefa84d6cf7e032387816ff8db2a8eef Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: simpleauthority <jacob@algorithmjunkie.com>
 Date: Tue, 28 May 2019 03:48:51 -0700
 Subject: [PATCH] Implement CraftBlockSoundGroup
@@ -6,7 +6,7 @@ Subject: [PATCH] Implement CraftBlockSoundGroup
 
 diff --git a/src/main/java/com/destroystokyo/paper/block/CraftBlockSoundGroup.java b/src/main/java/com/destroystokyo/paper/block/CraftBlockSoundGroup.java
 new file mode 100644
-index 00000000..99f99330
+index 0000000000000000000000000000000000000000..99f99330d01fc61ce8ede9f225b0c42bd8f9ded1
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/block/CraftBlockSoundGroup.java
 @@ -0,0 +1,38 @@
@@ -49,10 +49,10 @@ index 00000000..99f99330
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/IBlockData.java b/src/main/java/net/minecraft/server/IBlockData.java
-index c1ff62aa..de438816 100644
+index cca2bf1045c1305a9defa5241909b50711b85d4c..321eae23c575528788b1b575f17593580d6ba737 100644
 --- a/src/main/java/net/minecraft/server/IBlockData.java
 +++ b/src/main/java/net/minecraft/server/IBlockData.java
-@@ -275,6 +275,7 @@ public class IBlockData extends BlockDataAbstract<Block, IBlockData> implements
+@@ -276,6 +276,7 @@ public class IBlockData extends BlockDataAbstract<Block, IBlockData> implements
          return this.getBlock().isTicking(this);
      }
  
@@ -61,7 +61,7 @@ index c1ff62aa..de438816 100644
          return this.getBlock().getStepSound(this);
      }
 diff --git a/src/main/java/net/minecraft/server/SoundEffectType.java b/src/main/java/net/minecraft/server/SoundEffectType.java
-index b774d2d8..0184bf3f 100644
+index b774d2d8d903acc1ce4c5bd9240b2e96779e1d53..0184bf3fc9e206cec003c5a325d5ee21f6b59dda 100644
 --- a/src/main/java/net/minecraft/server/SoundEffectType.java
 +++ b/src/main/java/net/minecraft/server/SoundEffectType.java
 @@ -27,10 +27,10 @@ public class SoundEffectType {
@@ -96,7 +96,7 @@ index b774d2d8..0184bf3f 100644
          return this.D;
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index 1354d949..aae81867 100644
+index 30b7c9038d3a95b80304e052a5d629b461f76e99..1fc7f55fcaa1f9aaa4c675f9fcd508ffb80e9629 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 @@ -704,4 +704,11 @@ public class CraftBlock implements Block {
@@ -111,6 +111,3 @@ index 1354d949..aae81867 100644
 +    }
 +    // Paper end
  }
--- 
-2.25.1.windows.1
-

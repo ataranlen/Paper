@@ -1,4 +1,4 @@
-From ae592aa30cc3b397c74926c89b7a4ae4682ab2cb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Spottedleaf <Spottedleaf@users.noreply.github.com>
 Date: Sat, 15 Jun 2019 08:54:33 -0700
 Subject: [PATCH] Fix World#isChunkGenerated calls
@@ -8,7 +8,7 @@ This patch also adds a chunk status cache on region files (note that
 its only purpose is to cache the status on DISK)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index d41316c4..262055fc 100644
+index 6713b7667ae4fe3f1f555a71321832b4a9492162..4c9c8e483974f8869d6711626620cfd7d814d956 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -28,7 +28,7 @@ public class ChunkProviderServer extends IChunkProvider {
@@ -20,7 +20,7 @@ index d41316c4..262055fc 100644
      public final PlayerChunkMap playerChunkMap;
      private final WorldPersistentData worldPersistentData;
      private long lastTickTime;
-@@ -282,6 +282,21 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -284,6 +284,21 @@ public class ChunkProviderServer extends IChunkProvider {
  
          return ret;
      }
@@ -43,7 +43,7 @@ index d41316c4..262055fc 100644
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/server/ChunkRegionLoader.java b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
-index 83bcef7e..47e074a1 100644
+index f54572773c25b6716a68166efa8d3fc8b22b6258..8e4b3e52cbc95e24b1d72aed9ec8c32b94a91561 100644
 --- a/src/main/java/net/minecraft/server/ChunkRegionLoader.java
 +++ b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
 @@ -403,6 +403,17 @@ public class ChunkRegionLoader {
@@ -65,7 +65,7 @@ index 83bcef7e..47e074a1 100644
          if (nbttagcompound != null) {
              ChunkStatus chunkstatus = ChunkStatus.a(nbttagcompound.getCompound("Level").getString("Status"));
 diff --git a/src/main/java/net/minecraft/server/ChunkStatus.java b/src/main/java/net/minecraft/server/ChunkStatus.java
-index efdf611e..134a4f0b 100644
+index efdf611e66ffd782291de749d8a48f3bf08f2129..134a4f0b7d254b5dd8ca26a9c5874532826978c4 100644
 --- a/src/main/java/net/minecraft/server/ChunkStatus.java
 +++ b/src/main/java/net/minecraft/server/ChunkStatus.java
 @@ -176,6 +176,7 @@ public class ChunkStatus {
@@ -95,7 +95,7 @@ index efdf611e..134a4f0b 100644
          return (ChunkStatus) IRegistry.CHUNK_STATUS.get(MinecraftKey.a(s));
      }
 diff --git a/src/main/java/net/minecraft/server/IChunkLoader.java b/src/main/java/net/minecraft/server/IChunkLoader.java
-index f0a052ee..2f95174f 100644
+index f0a052eec2fb72b11dc70bf62a5e57f599bbc190..2f95174fcc467908808ed3f2dc956bdcafdc3558 100644
 --- a/src/main/java/net/minecraft/server/IChunkLoader.java
 +++ b/src/main/java/net/minecraft/server/IChunkLoader.java
 @@ -8,7 +8,7 @@ import javax.annotation.Nullable;
@@ -108,7 +108,7 @@ index f0a052ee..2f95174f 100644
      @Nullable
      private PersistentStructureLegacy c;
 diff --git a/src/main/java/net/minecraft/server/PlayerChunk.java b/src/main/java/net/minecraft/server/PlayerChunk.java
-index 3d255b19..040d4b41 100644
+index 3d255b19647fb37f53a420c907bc634181580c18..040d4b41ea2223937ca22de2d40560f97b310f9a 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunk.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunk.java
 @@ -114,6 +114,19 @@ public class PlayerChunk {
@@ -132,10 +132,10 @@ index 3d255b19..040d4b41 100644
  
      public CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> getStatusFutureUnchecked(ChunkStatus chunkstatus) {
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index 18c71609..57b1341b 100644
+index 4f5b516144829a7ae11f21a56789ac7a1f256250..1d517fd1aea90edf470388fd857a41f2be149327 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -968,12 +968,62 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -969,12 +969,62 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
      }
  
      @Nullable
@@ -201,7 +201,7 @@ index 18c71609..57b1341b 100644
          // Spigot start
          return isOutsideOfRange(chunkcoordintpair, false);
 diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
-index 6b543f89..d37abf2c 100644
+index 6b543f89d4e32fb79bfe9aa7b815e4117dbea602..d37abf2cf304f81405e570588c8accbc44a629f4 100644
 --- a/src/main/java/net/minecraft/server/RegionFile.java
 +++ b/src/main/java/net/minecraft/server/RegionFile.java
 @@ -36,6 +36,30 @@ public class RegionFile implements AutoCloseable {
@@ -250,7 +250,7 @@ index 6b543f89..d37abf2c 100644
              this.c();
          } finally {
 diff --git a/src/main/java/net/minecraft/server/RegionFileCache.java b/src/main/java/net/minecraft/server/RegionFileCache.java
-index b3d1bb5f..e07ae985 100644
+index 942b7d323936a872d83c536c1901b4b436aa7e7c..2f8af42e2aadeb1b11db94fdb54ec0ba9e30f095 100644
 --- a/src/main/java/net/minecraft/server/RegionFileCache.java
 +++ b/src/main/java/net/minecraft/server/RegionFileCache.java
 @@ -18,7 +18,14 @@ public final class RegionFileCache implements AutoCloseable {
@@ -269,7 +269,7 @@ index b3d1bb5f..e07ae985 100644
          long i = ChunkCoordIntPair.pair(chunkcoordintpair.getRegionX(), chunkcoordintpair.getRegionZ());
          RegionFile regionfile = (RegionFile) this.cache.getAndMoveToFirst(i);
  
-@@ -160,7 +167,8 @@ public final class RegionFileCache implements AutoCloseable {
+@@ -165,7 +172,8 @@ public final class RegionFileCache implements AutoCloseable {
  
          try {
              NBTCompressedStreamTools.a(nbttagcompound, (DataOutput) dataoutputstream);
@@ -280,18 +280,18 @@ index b3d1bb5f..e07ae985 100644
              throwable = throwable1;
              throw throwable1;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 661a89c5..a71bb865 100644
+index 8f8c18c5a4f483acee0d61a8007577ac8193bef9..50467656df0b54c2dcba8696b5677a2fc975b178 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -18,6 +18,7 @@ import java.util.Objects;
+@@ -19,6 +19,7 @@ import java.util.Objects;
  import java.util.Random;
  import java.util.Set;
  import java.util.UUID;
 +import java.util.concurrent.CompletableFuture;
  import java.util.function.Predicate;
  import java.util.stream.Collectors;
- import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-@@ -408,8 +409,22 @@ public class CraftWorld implements World {
+ import net.minecraft.server.ArraySetSorted;
+@@ -410,8 +411,22 @@ public class CraftWorld implements World {
  
      @Override
      public boolean isChunkGenerated(int x, int z) {
@@ -315,7 +315,7 @@ index 661a89c5..a71bb865 100644
          } catch (IOException ex) {
              throw new RuntimeException(ex);
          }
-@@ -521,20 +536,49 @@ public class CraftWorld implements World {
+@@ -523,20 +538,49 @@ public class CraftWorld implements World {
      @Override
      public boolean loadChunk(int x, int z, boolean generate) {
          org.spigotmc.AsyncCatcher.catchOp("chunk load"); // Spigot
@@ -375,6 +375,3 @@ index 661a89c5..a71bb865 100644
      }
  
      @Override
--- 
-2.25.1.windows.1
-

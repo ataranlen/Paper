@@ -1,14 +1,14 @@
-From 56a70e238a04999209b1b0d75b00f23a7f904e7c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: kickash32 <kickash32@gmail.com>
 Date: Mon, 19 Aug 2019 01:27:58 +0500
 Subject: [PATCH] implement optional per player mob spawns
 
 
 diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-index 30bafb21..c9a3ba4b 100644
+index 98acbfa44dd9042b26fdf719d7748f92d201c928..a94ebf7c76f167d3b66f7d243910c13d4bfaaba3 100644
 --- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 +++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-@@ -60,6 +60,7 @@ public class WorldTimingsHandler {
+@@ -56,6 +56,7 @@ public class WorldTimingsHandler {
  
  
      public final Timing miscMobSpawning;
@@ -16,7 +16,7 @@ index 30bafb21..c9a3ba4b 100644
  
      public final Timing poiUnload;
      public final Timing chunkUnload;
-@@ -129,6 +130,7 @@ public class WorldTimingsHandler {
+@@ -121,6 +122,7 @@ public class WorldTimingsHandler {
  
  
          miscMobSpawning = Timings.ofSafe(name + "Mob spawning - Misc");
@@ -25,10 +25,10 @@ index 30bafb21..c9a3ba4b 100644
          poiUnload = Timings.ofSafe(name + "Chunk unload - POI");
          chunkUnload = Timings.ofSafe(name + "Chunk unload - Chunk");
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 9d9260ad..fd3dbea6 100644
+index b1d09eb457cfd1be7590f200abfa8cb2236600ef..515673e0fec1dc5c8a188d594f5c9b698c47d0e1 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-@@ -613,4 +613,9 @@ public class PaperWorldConfig {
+@@ -601,4 +601,9 @@ public class PaperWorldConfig {
              }
          }
      }
@@ -40,7 +40,7 @@ index 9d9260ad..fd3dbea6 100644
  }
 diff --git a/src/main/java/com/destroystokyo/paper/util/PlayerMobDistanceMap.java b/src/main/java/com/destroystokyo/paper/util/PlayerMobDistanceMap.java
 new file mode 100644
-index 00000000..9ebd7ecb
+index 0000000000000000000000000000000000000000..9ebd7ecb7a0ac73ccacf34c097056598bb5d26e8
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/util/PlayerMobDistanceMap.java
 @@ -0,0 +1,253 @@
@@ -299,7 +299,7 @@ index 00000000..9ebd7ecb
 +}
 diff --git a/src/main/java/com/destroystokyo/paper/util/PooledHashSets.java b/src/main/java/com/destroystokyo/paper/util/PooledHashSets.java
 new file mode 100644
-index 00000000..4f13d3ff
+index 0000000000000000000000000000000000000000..4f13d3ff8391793a99f067189f854078334499c6
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/util/PooledHashSets.java
 @@ -0,0 +1,241 @@
@@ -545,10 +545,10 @@ index 00000000..4f13d3ff
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index dd4bb664..d0602743 100644
+index 32bea1dea9ebb05ed94f5b47e6ad2145f6319431..7a4e2c350e78b22dc035471ad0d7191dfd7afede 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -739,7 +739,22 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -746,7 +746,22 @@ public class ChunkProviderServer extends IChunkProvider {
              this.world.timings.countNaturalMobs.startTiming(); // Paper - timings
              int l = this.chunkMapDistance.b();
              EnumCreatureType[] aenumcreaturetype = EnumCreatureType.values();
@@ -572,7 +572,7 @@ index dd4bb664..d0602743 100644
  
              this.world.timings.countNaturalMobs.stopTiming(); // Paper - timings
              this.world.getMethodProfiler().exit();
-@@ -807,8 +822,23 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -814,8 +829,23 @@ public class ChunkProviderServer extends IChunkProvider {
                                  if (enumcreaturetype != EnumCreatureType.MISC && (!enumcreaturetype.c() || this.allowAnimals) && (enumcreaturetype.c() || this.allowMonsters) && (!enumcreaturetype.d() || flag2)) {
                                      int k1 = limit * l / ChunkProviderServer.b; // CraftBukkit - use per-world limits
  
@@ -599,7 +599,7 @@ index dd4bb664..d0602743 100644
                                  }
                              }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 82a80e34..3d0316e9 100644
+index f375c9507c0ec0c2f810f8fff5304e70e02b7064..fcd887ce30dac081712811d740049d03c73db83d 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -81,6 +81,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -622,7 +622,7 @@ index 82a80e34..3d0316e9 100644
      }
  
      // Yes, this doesn't match Vanilla, but it's the best we can do for now.
-@@ -1764,6 +1770,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1766,6 +1772,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      }
  
@@ -631,7 +631,7 @@ index 82a80e34..3d0316e9 100644
          return this.cs;
      }
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
-index 8427ee2e..0f04bcc8 100644
+index 8427ee2ee8b90d5deb686412bb2eefb9a574b75a..0f04bcc8b7cd5bd0536dd3fccab0f4dae6b0130b 100644
 --- a/src/main/java/net/minecraft/server/EntityTypes.java
 +++ b/src/main/java/net/minecraft/server/EntityTypes.java
 @@ -254,6 +254,7 @@ public class EntityTypes<T extends Entity> {
@@ -643,7 +643,7 @@ index 8427ee2e..0f04bcc8 100644
          return this.bb;
      }
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index 7e5fa016..f564502f 100644
+index 963ce3eeec6f9eea087054ea48b714eeb236bbfa..692388821a795f60ffab8459475a764e1c409e2e 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
 @@ -78,7 +78,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
@@ -656,7 +656,7 @@ index 7e5fa016..f564502f 100644
  
      // CraftBukkit start - recursion-safe executor for Chunk loadCallback() and unloadCallback()
      public final CallbackExecutor callbackExecutor = new CallbackExecutor();
-@@ -165,6 +166,24 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -158,6 +159,24 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
          this.l = supplier;
          this.m = new VillagePlace(new File(this.w, "poi"), datafixer, this.world); // Paper
          this.setViewDistance(i);
@@ -682,7 +682,7 @@ index 7e5fa016..f564502f 100644
  
      private static double a(ChunkCoordIntPair chunkcoordintpair, Entity entity) {
 diff --git a/src/main/java/net/minecraft/server/SpawnerCreature.java b/src/main/java/net/minecraft/server/SpawnerCreature.java
-index fdac5bb3..58bbf2f9 100644
+index fdac5bb3a2d4a73035e1d914979b87fc224b6b20..58bbf2f9d2ec91715051d40e108e16067bb36561 100644
 --- a/src/main/java/net/minecraft/server/SpawnerCreature.java
 +++ b/src/main/java/net/minecraft/server/SpawnerCreature.java
 @@ -3,6 +3,7 @@ package net.minecraft.server;
@@ -755,10 +755,10 @@ index fdac5bb3..58bbf2f9 100644
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 149600ae..b164ee89 100644
+index 469f4e718ba123c65b9743877555f14d8d218589..1838add259a1a2919a80cc5d773ed89ed5d73c01 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -1028,7 +1028,20 @@ public class WorldServer extends World {
+@@ -1031,7 +1031,20 @@ public class WorldServer extends World {
      }
  
      public Object2IntMap<EnumCreatureType> l() {
@@ -780,7 +780,7 @@ index 149600ae..b164ee89 100644
          ObjectIterator objectiterator = this.entitiesById.values().iterator();
  
          while (objectiterator.hasNext()) {
-@@ -1053,11 +1066,16 @@ public class WorldServer extends World {
+@@ -1056,11 +1069,16 @@ public class WorldServer extends World {
                      continue;
                  }
                  // Paper end
@@ -799,6 +799,3 @@ index 149600ae..b164ee89 100644
      }
  
      @Override
--- 
-2.25.1.windows.1
-

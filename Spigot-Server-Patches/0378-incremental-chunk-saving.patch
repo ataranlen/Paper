@@ -1,11 +1,11 @@
-From 24f31d237a2e8bb14ce2bbc184190599107ef63d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 9 Jun 2019 03:53:22 +0100
 Subject: [PATCH] incremental chunk saving
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 071e5e7f..48676152 100644
+index 071e5e7f729d6c3ffb70506e7ef32eebee1e9118..48676152152faf7a7b9524ac37d8b4a8c32c4e2c 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 @@ -487,4 +487,19 @@ public class PaperWorldConfig {
@@ -29,7 +29,7 @@ index 071e5e7f..48676152 100644
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index 23cc0c36..d6637f3d 100644
+index 165cb994e84bbcbdeb5ec14b561433257fd0df28..af0d6aff4de78e81fd3feb16719efdccc05ccb90 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -42,7 +42,7 @@ public class Chunk implements IChunkAccess {
@@ -42,10 +42,10 @@ index 23cc0c36..d6637f3d 100644
      private long inhabitedTime;
      @Nullable
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index c7e86488..d41316c4 100644
+index e6d08756f76360b29b29f18305e5ec84d09f2d54..6713b7667ae4fe3f1f555a71321832b4a9492162 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -513,6 +513,15 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -515,6 +515,15 @@ public class ChunkProviderServer extends IChunkProvider {
          } // Paper - Timings
      }
  
@@ -62,7 +62,7 @@ index c7e86488..d41316c4 100644
      public void close() throws IOException {
          // CraftBukkit start
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index e9841ef5..7ca4a7cc 100644
+index 0ee1d8e4869bfd0ccba21a227e115a36ff027984..7ecf781263179d87c943b08e192d8f010cf20d3e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -168,6 +168,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
@@ -73,7 +73,7 @@ index e9841ef5..7ca4a7cc 100644
      public File bukkitDataPackFolder;
      public CommandDispatcher vanillaCommandDispatcher;
      private boolean forceTicks;
-@@ -1111,14 +1112,28 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1113,14 +1114,28 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
              this.serverPing.b().a(agameprofile);
          }
  
@@ -108,7 +108,7 @@ index e9841ef5..7ca4a7cc 100644
          this.methodProfiler.enter("snooper");
          if (((DedicatedServer) this).getDedicatedServerProperties().snooperEnabled && !this.snooper.d() && this.ticks > 100) { // Spigot
 diff --git a/src/main/java/net/minecraft/server/PlayerChunk.java b/src/main/java/net/minecraft/server/PlayerChunk.java
-index a640cb38..3d255b19 100644
+index a640cb3845a853780b8cc2dbfc6e9be3728817e7..3d255b19647fb37f53a420c907bc634181580c18 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunk.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunk.java
 @@ -40,6 +40,9 @@ public class PlayerChunk {
@@ -175,10 +175,10 @@ index a640cb38..3d255b19 100644
      public void a(ProtoChunkExtension protochunkextension) {
          for (int i = 0; i < this.statusFutures.length(); ++i) {
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index cdab5ab6..18c71609 100644
+index 34f470779fa5d1cf9638431253024481236c073b..4f5b516144829a7ae11f21a56789ac7a1f256250 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -331,6 +331,64 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -332,6 +332,64 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
  
      }
  
@@ -243,7 +243,7 @@ index cdab5ab6..18c71609 100644
      protected void save(boolean flag) {
          if (flag) {
              List<PlayerChunk> list = (List) this.visibleChunks.values().stream().filter(PlayerChunk::hasBeenLoaded).peek(PlayerChunk::m).collect(Collectors.toList());
-@@ -441,6 +499,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -442,6 +500,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
  
                          this.world.unloadChunk(chunk);
                      }
@@ -251,7 +251,7 @@ index cdab5ab6..18c71609 100644
  
                      this.lightEngine.a(ichunkaccess.getPos());
                      this.lightEngine.queueUpdate();
-@@ -622,6 +681,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -623,6 +682,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                      playerchunk.a(new ProtoChunkExtension(chunk));
                  }
  
@@ -261,10 +261,10 @@ index cdab5ab6..18c71609 100644
                      return PlayerChunk.getChunkState(playerchunk.getTicketLevel());
                  });
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 389c9d03..62c22750 100644
+index b28868766117f0cfdcc5db271b9415d9ae97ad19..46ad4612a1bd5ab005450645f69b0cb9f6f18aa7 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -814,11 +814,44 @@ public class WorldServer extends World {
+@@ -817,11 +817,44 @@ public class WorldServer extends World {
          return this.worldProvider.c();
      }
  
@@ -310,7 +310,7 @@ index 389c9d03..62c22750 100644
              try (co.aikar.timings.Timing ignored = timings.worldSave.startTiming()) { // Paper
              if (iprogressupdate != null) {
                  iprogressupdate.a(new ChatMessage("menu.savingLevel", new Object[0]));
-@@ -845,6 +878,7 @@ public class WorldServer extends World {
+@@ -848,6 +881,7 @@ public class WorldServer extends World {
          // CraftBukkit end
      }
  
@@ -318,6 +318,3 @@ index 389c9d03..62c22750 100644
      protected void m_() throws ExceptionWorldConflict {
          this.checkSession();
          this.worldProvider.i();
--- 
-2.25.1.windows.1
-

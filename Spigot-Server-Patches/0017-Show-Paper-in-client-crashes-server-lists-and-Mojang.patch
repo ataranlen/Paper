@@ -1,4 +1,4 @@
-From 4d48a37c0c99a45cff782138493194d06df4dc42 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Zach Brown <zach.brown@destroystokyo.com>
 Date: Tue, 1 Mar 2016 14:32:43 -0600
 Subject: [PATCH] Show 'Paper' in client crashes, server lists, and Mojang
@@ -6,7 +6,7 @@ Subject: [PATCH] Show 'Paper' in client crashes, server lists, and Mojang
 
 
 diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
-index 3f35a28ba..cf00f35a5 100644
+index 3f35a28ba15f4d0dfe1cb2b56f621e81b1fb8c99..cf00f35a5b7c2d2f6b6989e0855de8b882dcef50 100644
 --- a/src/main/java/net/minecraft/server/EULA.java
 +++ b/src/main/java/net/minecraft/server/EULA.java
 @@ -70,7 +70,7 @@ public class EULA {
@@ -19,10 +19,10 @@ index 3f35a28ba..cf00f35a5 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 456d03be2..35b226cd5 100644
+index 67bdd577477730f1775f87189c9fcee6f92c7e57..e71ee0fb3393463044ca3e1d486ab749e55fbc44 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1343,7 +1343,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1345,7 +1345,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -32,7 +32,7 @@ index 456d03be2..35b226cd5 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index f3eacb181..99a6b3d44 100644
+index 1ceba5f7eae58426834d7042af17f7e3b1990a56..ee749863730cb2228712ceddd4e405a798f73c5e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -199,7 +199,7 @@ import org.yaml.snakeyaml.error.MarkedYAMLException;
@@ -45,11 +45,11 @@ index f3eacb181..99a6b3d44 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 0d8668d34..ba0fe4ae2 100644
+index 101d5b42e319c010fd7ed043fb17d1f2289ae38f..1ee40506095ed14f50b4b8031bb882e9bea475b5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -201,12 +201,25 @@ public class Main {
-                     deadline.add(Calendar.DAY_OF_YEAR, -14);
+@@ -200,12 +200,25 @@ public class Main {
+                     deadline.add(Calendar.DAY_OF_YEAR, -21);
                      if (buildDate.before(deadline.getTime())) {
                          System.err.println("*** Error, this build is outdated ***");
 -                        System.err.println("*** Please download a new build as per instructions from https://www.spigotmc.org/go/outdated-spigot ***");
@@ -76,7 +76,7 @@ index 0d8668d34..ba0fe4ae2 100644
                  MinecraftServer.main(options);
              } catch (Throwable t) {
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index 54fa83c12..73fa74e3c 100644
+index 54fa83c127bf2f8fe30295864f5f73cf6248ad28..73fa74e3cc0239a38cd2ba41b3e9e991a5c4ebf9 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
 @@ -19,7 +19,7 @@ public class WatchdogThread extends Thread
@@ -115,6 +115,3 @@ index 54fa83c12..73fa74e3c 100644
                  dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE ), log );
                  log.log( Level.SEVERE, "------------------------------" );
                  //
--- 
-2.26.0
-

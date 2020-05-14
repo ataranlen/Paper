@@ -1,4 +1,4 @@
-From e0a88576c7e8675a3d748dd802c0f2fde9be1652 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: kickash32 <kickash32@gmail.com>
 Date: Sat, 21 Dec 2019 15:22:09 -0500
 Subject: [PATCH] Tracking Range Improvements
@@ -7,8 +7,20 @@ Sets tracking range of watermobs to animals instead of misc and simplifies code
 
 Also ignores Enderdragon, defaulting it to Mojang's setting
 
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index 692388821a795f60ffab8459475a764e1c409e2e..6eb055913177b0c01a027b2b356190dc561072c5 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -1737,6 +1737,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+             while (iterator.hasNext()) {
+                 Entity entity = (Entity) iterator.next();
+                 int j = entity.getEntityType().getChunkRange() * 16;
++                j = org.spigotmc.TrackingRange.getEntityTrackingRange(entity, j); // Paper
+ 
+                 if (j > i) {
+                     i = j;
 diff --git a/src/main/java/org/spigotmc/TrackingRange.java b/src/main/java/org/spigotmc/TrackingRange.java
-index 6f8e6c1d..46c33e69 100644
+index 6f8e6c1d079f82d7706d0b4f710bfb9b50e209d9..765bdaf9b525a989ec8d37a2fe856dcfcbd06782 100644
 --- a/src/main/java/org/spigotmc/TrackingRange.java
 +++ b/src/main/java/org/spigotmc/TrackingRange.java
 @@ -1,6 +1,7 @@
@@ -19,7 +31,7 @@ index 6f8e6c1d..46c33e69 100644
  import net.minecraft.server.EntityExperienceOrb;
  import net.minecraft.server.EntityGhast;
  import net.minecraft.server.EntityItem;
-@@ -25,26 +26,24 @@ public class TrackingRange
+@@ -25,26 +26,26 @@ public class TrackingRange
          if ( entity instanceof EntityPlayer )
          {
              return config.playerTrackingRange;
@@ -35,6 +47,7 @@ index 6f8e6c1d..46c33e69 100644
 +        switch (entity.activationType) {
 +            case RAIDER:
 +            case MONSTER:
++            case FLYING_MONSTER:
                  return config.monsterTrackingRange;
 -            } else
 -            {
@@ -45,6 +58,7 @@ index 6f8e6c1d..46c33e69 100644
 -            return config.animalTrackingRange;
 -        } else if ( entity instanceof EntityItemFrame || entity instanceof EntityPainting || entity instanceof EntityItem || entity instanceof EntityExperienceOrb )
 +            case WATER:
++            case VILLAGER:
 +            case ANIMAL:
 +                return config.animalTrackingRange;
 +            case MISC:
@@ -59,6 +73,3 @@ index 6f8e6c1d..46c33e69 100644
              return config.otherTrackingRange;
          }
      }
--- 
-2.25.1.windows.1
-

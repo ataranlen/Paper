@@ -1,11 +1,11 @@
-From 37de5b98196c7a889e95c9d1b89966b3ae3e7c09 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Wed, 2 Mar 2016 23:13:07 -0600
 Subject: [PATCH] Send absolute position the first time an entity is seen
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index a75e0ec54e..a13fd9b340 100644
+index a75e0ec54e9dfd98c1bcbd13cb022ab05d8410b9..a13fd9b3404381879663c1f694a5d1903d1fd884 100644
 --- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -77,10 +77,10 @@ index a75e0ec54e..a13fd9b340 100644
  
                  this.c();
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index 2a6955f855..3dd72e0842 100644
+index 65134c87772cb6d4d732fc223929cfda7524dde2..eece2f689cce58a35d33c6e8d9d56ea4e9dfd88c 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -1217,10 +1217,14 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1220,10 +1220,14 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
          private final Entity tracker;
          private final int trackingDistance;
          private SectionPosition e;
@@ -97,7 +97,7 @@ index 2a6955f855..3dd72e0842 100644
              this.tracker = entity;
              this.trackingDistance = i;
              this.e = SectionPosition.a(entity);
-@@ -1302,7 +1306,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1305,7 +1309,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                      entityplayer.removeQueue.remove(Integer.valueOf(this.tracker.getId()));
                      // CraftBukkit end
  
@@ -106,6 +106,3 @@ index 2a6955f855..3dd72e0842 100644
                          this.trackerEntry.b(entityplayer);
                      }
                  } else if (this.trackedPlayers.remove(entityplayer)) {
--- 
-2.25.1
-
